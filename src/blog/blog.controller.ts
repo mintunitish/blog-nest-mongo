@@ -45,5 +45,14 @@ export class BlogController {
     }
 
     @Delete('/delete')
-    async deletePost(@Res() res, @Query('postId', new ValidateObjectId()) postId) {}
+    async deletePost(@Res() res, @Query('postId', new ValidateObjectId()) postId) {
+        const deletedPost = await this.blogService.deletePost(postId);
+        if (!deletedPost) {
+            throw new NotFoundException('Post Does Not Exists!');
+        }
+        return res.status(HttpStatus.OK).json({
+            message: 'Post has been deleted successfully!',
+            post: deletedPost,
+        });
+    }
 }
